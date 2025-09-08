@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post" class="card p-4 shadow-lg rounded-4 mx-auto" style="max-width: 500px;">
+  <div class="mb-3">
+    <label>Name</label>
+    <input type="text" class="form-control" name="name" required>
+  </div>
+  <div class="mb-3">
+    <label>Age</label>
+    <input type="number" class="form-control" name="age" required>
+  </div>
+  <div class="mb-3">
+    <label>Pregnancies</label>
+    <input type="number" class="form-control" name="pregnancies" required>
+  </div>
+  <div class="mb-3">
+    <label>Glucose</label>
+    <input type="number" step="0.1" class="form-control" name="glucose" required>
+  </div>
+  <div class="mb-3">
+    <label>Blood Pressure</label>
+    <input type="number" step="0.1" class="form-control" name="bp" required>
+  </div>
+  <div class="mb-3">
+    <label>Skin Thickness</label>
+    <input type="number" step="0.1" class="form-control" name="skin" required>
+  </div>
+  <div class="mb-3">
+    <label>Insulin</label>
+    <input type="number" step="0.1" class="form-control" name="insulin" required>
+  </div>
+  <div class="mb-3">
+    <label>BMI</label>
+    <input type="number" step="0.1" class="form-control" name="bmi" required>
+  </div>
+  <div class="mb-3">
+    <label>Diabetes Pedigree Function (DPF)</label>
+    <input type="number" step="0.01" class="form-control" name="dpf" required>
+  </div>
+  <button type="submit" class="btn btn-primary w-100">Predict</button>
+</form>
+{% endblock %}

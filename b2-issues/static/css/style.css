@@ -1,0 +1,1222 @@
+/* ================================
+   BASE STYLING
+================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* ================================
+   NAVBAR
+================================ */
+.navbar {
+    background-color: #0d6efd !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 20px rgba(13, 110, 253, 0.3);
+}
+
+.navbar .nav-link {
+    color: #fff !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 0.75rem 1rem;
+    border-radius: 25px;
+    margin: 0 5px;
+}
+
+.navbar .nav-link:hover {
+    color: #ffc107 !important;
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+    color: #fff !important;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+    color: #ffc107 !important;
+}
+
+/* ================================
+   CARDS & CONTAINERS
+================================ */
+.card {
+    background-color: #fff;
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    color: white;
+    border: none;
+    padding: 1.5rem;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* ================================
+   HEADINGS
+================================ */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    border-radius: 2px;
+}
+
+h3.text-success { color: #28a745 !important; }
+h3.text-warning { color: #ffc107 !important; }
+h3.text-danger { color: #dc3545 !important; }
+h3.text-primary { color: #0d6efd !important; }
+
+/* ================================
+   BUTTONS
+================================ */
+.btn {
+    font-weight: 600;
+    border-radius: 25px;
+    padding: 12px 30px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    color: white;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+    color: white;
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #198754, #20c997);
+    color: white;
+    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(25, 135, 84, 0.4);
+    color: white;
+}
+
+.btn-warning {
+    background: linear-gradient(45deg, #ffc107, #ffdb4a);
+    color: #333;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+    color: #333;
+}
+
+.btn-danger {
+    background: linear-gradient(45deg, #dc3545, #e55a6a);
+    color: white;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+    color: white;
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #6c757d, #adb5bd);
+    color: white;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    color: white;
+}
+
+.btn-outline-primary {
+    border: 2px solid #0d6efd;
+    color: #0d6efd;
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: #0d6efd;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+    background: transparent;
+}
+
+.btn-outline-secondary:hover {
+    background: #6c757d;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Small button variants */
+.btn-sm {
+    padding: 8px 20px;
+    font-size: 0.875rem;
+    border-radius: 20px;
+}
+
+.btn-lg {
+    padding: 15px 40px;
+    font-size: 1.125rem;
+    border-radius: 30px;
+}
+
+/* ================================
+   FORMS
+================================ */
+.form-control, .form-select {
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    background-color: #fff;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+    transform: translateY(-2px);
+    outline: none;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* Form floating labels */
+.form-floating {
+    position: relative;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+    color: #0d6efd;
+}
+
+/* ================================
+   TABLES
+================================ */
+.table {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    background: white;
+    margin-bottom: 0;
+}
+
+.table-responsive {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.table thead {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    color: #fff;
+}
+
+.table thead th {
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+    padding: 1.25rem;
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.table tbody td {
+    border: none;
+    padding: 1.25rem;
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(13, 110, 253, 0.02);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* ================================
+   BADGES
+================================ */
+.badge {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.6rem 1rem;
+    border-radius: 25px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.bg-success {
+    background: linear-gradient(45deg, #198754, #20c997) !important;
+}
+
+.bg-warning {
+    background: linear-gradient(45deg, #ffc107, #ffdb4a) !important;
+    color: #333 !important;
+}
+
+.bg-danger {
+    background: linear-gradient(45deg, #dc3545, #e55a6a) !important;
+}
+
+.bg-primary {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5) !important;
+}
+
+.bg-info {
+    background: linear-gradient(45deg, #0dcaf0, #31d2f2) !important;
+    color: #333 !important;
+}
+
+/* ================================
+   ALERTS
+================================ */
+.alert {
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    animation: slideInDown 0.5s ease-out;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #ffffff 100%);
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da 0%, #ffffff 100%);
+    border-left: 4px solid #dc3545;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%);
+    border-left: 4px solid #ffc107;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #ffffff 100%);
+    border-left: 4px solid #17a2b8;
+}
+
+.alert-primary {
+    background: linear-gradient(135deg, #cce7ff 0%, #ffffff 100%);
+    border-left: 4px solid #0d6efd;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================================
+   MODALS
+================================ */
+.modal-content {
+    border-radius: 1rem;
+    border: none;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    color: white;
+    border: none;
+    padding: 1.5rem;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-footer {
+    border: none;
+    padding: 1rem 2rem 2rem;
+}
+
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* ================================
+   ADMIN & DOCTOR DASHBOARD STYLES
+================================ */
+.dashboard-card {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border-left: 4px solid #0d6efd;
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    border-left-width: 8px;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #0d6efd;
+    display: block;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+}
+
+.stat-label {
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.875rem;
+}
+
+/* Admin specific styles */
+.admin-card {
+    border-left: 4px solid #dc3545;
+}
+
+.admin-section {
+    background: linear-gradient(135deg, #f8d7da 0%, #ffffff 100%);
+}
+
+/* ================================
+   LOGIN & REGISTRATION FORMS
+================================ */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.auth-card {
+    background: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    padding: 2rem;
+    width: 100%;
+    max-width: 450px;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 2rem;
+}
+
+/* Password Reset Specific */
+.reset-container {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.reset-icon {
+    background: linear-gradient(45deg, #28a745, #20c997);
+}
+
+/* Forgot Password Specific */
+.forgot-container {
+    background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+}
+
+.forgot-icon {
+    background: linear-gradient(45deg, #17a2b8, #20c997);
+}
+
+/* ================================
+   RESULT PAGE STYLES
+================================ */
+.result-card {
+    border-left: 5px solid;
+    animation: slideUp 0.5s ease-out;
+    margin-bottom: 2rem;
+}
+
+.result-card.success {
+    border-left-color: #28a745;
+    background: linear-gradient(135deg, #d4edda 0%, #ffffff 100%);
+}
+
+.result-card.warning {
+    border-left-color: #ffc107;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%);
+}
+
+.result-card.danger {
+    border-left-color: #dc3545;
+    background: linear-gradient(135deg, #f8d7da 0%, #ffffff 100%);
+}
+
+.result-icon, .stage-icon {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.recommendation-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.recommendation-item:last-child {
+    border-bottom: none;
+}
+
+.recommendation-item i {
+    color: #28a745;
+    margin-right: 10px;
+}
+
+/* ================================
+   MEDICAL ICONS & ELEMENTS
+================================ */
+.medical-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    color: white;
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+/* ================================
+   FOOTER
+================================ */
+footer {
+    background: linear-gradient(45deg, #0d47a1, #1976d2);
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 2rem 0;
+    margin-top: 3rem;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+}
+
+/* ================================
+   LIST GROUPS
+================================ */
+.list-group-item {
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+    border-radius: 0.75rem !important;
+    background-color: #f8f9fa;
+}
+
+.list-group-item:hover {
+    background-color: #e3f2fd;
+    transform: translateX(5px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.list-group-item:nth-child(odd) {
+    background-color: #f1f3f4;
+}
+
+/* ================================
+   LOADING ANIMATIONS
+================================ */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(13,110,253,.3);
+    border-radius: 50%;
+    border-top-color: #0d6efd;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ================================
+   PROGRESS BARS
+================================ */
+.progress {
+    height: 12px;
+    border-radius: 10px;
+    background-color: #e9ecef;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.progress-bar {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    transition: width 0.6s ease;
+    border-radius: 10px;
+}
+
+/* ================================
+   UTILITY ANIMATIONS
+================================ */
+.fade-in {
+    animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-up {
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.bounce-in {
+    animation: bounceIn 0.8s ease-out;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ================================
+   CUSTOM SCROLLBAR
+================================ */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #0b5ed7, #3a9def);
+}
+
+/* ================================
+   SPECIAL EFFECT CLASSES
+================================ */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.shadow-lg-custom {
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.gradient-bg-primary {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+}
+
+.gradient-bg-success {
+    background: linear-gradient(45deg, #198754, #20c997);
+}
+
+.gradient-bg-warning {
+    background: linear-gradient(45deg, #ffc107, #ffdb4a);
+}
+
+.gradient-bg-danger {
+    background: linear-gradient(45deg, #dc3545, #e55a6a);
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+================================ */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 992px) {
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    h2::after {
+        width: 40px;
+        height: 2px;
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1.5rem;
+        border-radius: 0.75rem;
+    }
+    
+    .card-body {
+        padding: 1.25rem;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        width: 100%;
+    }
+    
+    .btn-lg {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+    
+    .btn-sm {
+        padding: 6px 15px;
+        font-size: 0.8rem;
+        width: auto;
+    }
+    
+    .table-responsive {
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .table thead th {
+        padding: 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .table tbody td {
+        padding: 1rem;
+        font-size: 0.85rem;
+    }
+    
+    h2::after {
+        width: 30px;
+        height: 2px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .hero-description {
+        font-size: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .form-control, .form-select {
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .btn-group-vertical .btn {
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .card {
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .auth-card {
+        padding: 1.5rem;
+        margin: 1rem;
+        border-radius: 1rem;
+    }
+    
+    .auth-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .table thead {
+        font-size: 0.75rem;
+    }
+    
+    .table tbody {
+        font-size: 0.8rem;
+    }
+    
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .alert {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .btn-group-vertical {
+        width: 100%;
+    }
+    
+    .btn-group-vertical .btn {
+        border-radius: 0.5rem;
+    }
+    
+    .medical-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .recommendation-item {
+        font-size: 0.9rem;
+        padding: 8px 0;
+    }
+    
+    .modal-dialog {
+        margin: 1rem;
+    }
+    
+    .modal-content {
+        border-radius: 0.75rem;
+    }
+    
+    .form-label {
+        font-size: 0.9rem;
+    }
+    
+    .form-text {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+    
+    .card-header {
+        padding: 1rem;
+    }
+    
+    .table {
+        font-size: 0.75rem;
+    }
+    
+    .badge {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+/* ================================
+   DARK MODE SUPPORT (Optional)
+================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bs-body-bg: #1a1a1a;
+        --bs-body-color: #ffffff;
+    }
+    
+    .card {
+        background-color: #2d2d2d;
+        color: #ffffff;
+    }
+    
+    .form-control, .form-select {
+        background-color: #3d3d3d;
+        border-color: #555;
+        color: #ffffff;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        background-color: #3d3d3d;
+        border-color: #0d6efd;
+        color: #ffffff;
+    }
+    
+    .table {
+        background-color: #2d2d2d;
+        color: #ffffff;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #404040;
+    }
+}
+
+/* ================================
+   PRINT STYLES
+================================ */
+@media print {
+    .navbar,
+    .btn,
+    .modal,
+    footer {
+        display: none !important;
+    }
+    
+    .card {
+        border: 1px solid #ddd;
+        box-shadow: none;
+        page-break-inside: avoid;
+    }
+    
+    .table {
+        border: 1px solid #ddd;
+    }
+    
+    .table thead th {
+        background: #f8f9fa !important;
+        color: #333 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .badge {
+        border: 1px solid #ddd;
+        color: #333 !important;
+        background: #f8f9fa !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .alert {
+        border: 1px solid #ddd;
+        background: #f8f9fa !important;
+        color: #333 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+/* ================================
+   ACCESSIBILITY IMPROVEMENTS
+================================ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.btn:focus,
+.form-control:focus,
+.form-select:focus {
+    outline: 2px solid #0d6efd;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .btn {
+        border: 2px solid currentColor;
+    }
+    
+    .card {
+        border: 1px solid #333;
+    }
+    
+    .table {
+        border: 2px solid #333;
+    }
+    
+    .table thead th {
+        border: 1px solid #333;
+    }
+    
+    .table tbody td {
+        border: 1px solid #333;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ================================
+   CUSTOM UTILITY CLASSES
+================================ */
+.text-gradient-primary {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.border-gradient-primary {
+    border: 2px solid;
+    border-image: linear-gradient(45deg, #0d6efd, #42a5f5) 1;
+}
+
+.shadow-soft {
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+
+.shadow-medium {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.shadow-strong {
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.rounded-xl {
+    border-radius: 1.5rem;
+}
+
+.rounded-xxl {
+    border-radius: 2rem;
+}
+
+.bg-gradient-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.text-shadow {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ================================
+   ANIMATION UTILITIES
+================================ */
+.animate-fade-in {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-slide-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.6s ease-out forwards;
+}
+
+.animate-bounce-in {
+    opacity: 0;
+    transform: scale(0.8);
+    animation: bounceIn 0.8s ease-out forwards;
+}
+
+/* Animation delays for staggered effects */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
