@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow-sm rounded-4 p-4 col-12 col-sm-8 col-md-5 col-lg-4">
+    <h2 class="text-center mb-4 text-primary">{{ page_title }}</h2>
+
+    <form method="POST">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control form-control-sm" id="username" name="username" placeholder="Enter your username" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control form-control-sm" id="password" name="password" placeholder="Enter your password" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="role" class="form-label">Role</label>
+        <select class="form-select form-select-sm" id="role" name="role" required>
+          <option value="">Select role</option>
+          <option value="user">User</option>
+          <option value="doctor">Doctor</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-3">{{ button_text }}</button>
+    </form>
+
+    <p class="mt-3 text-center small">
+      Already have an account? <a href="{{ url_for('login') }}" class="text-primary text-decoration-none">Login here</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

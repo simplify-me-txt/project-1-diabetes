@@ -1,0 +1,497 @@
+/* ================================
+   BASE STYLING
+================================ */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+}
+
+/* ================================
+   NAVBAR
+================================ */
+.navbar {
+    background-color: #0d6efd !important; /* Primary blue */
+    transition: all 0.3s ease;
+}
+.navbar .nav-link {
+    color: #fff !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+.navbar .nav-link:hover {
+    color: #ffc107 !important; /* Accent yellow on hover */
+    transform: translateY(-2px);
+}
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+}
+.navbar-brand:hover {
+    transform: scale(1.05);
+}
+
+/* ================================
+   CARDS
+================================ */
+.card {
+    background-color: #fff;
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+.card:hover {
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    transform: translateY(-5px);
+}
+
+/* Card header animations */
+.card-header {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    color: white;
+    border: none;
+    padding: 1.5rem;
+}
+
+/* ================================
+   HEADINGS
+================================ */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    border-radius: 2px;
+}
+
+h3.text-success { color: #28a745 !important; }   /* Normal */
+h3.text-warning { color: #ffc107 !important; }  /* Pre-Diabetic */
+h3.text-danger { color: #dc3545 !important; }   /* Type 1 & 2 */
+
+/* ================================
+   BUTTONS
+================================ */
+.btn {
+    font-weight: 600;
+    border-radius: 25px;
+    padding: 10px 25px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    border: none;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #198754, #20c997);
+    border: none;
+    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+}
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(25, 135, 84, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #6c757d, #adb5bd);
+    border: none;
+}
+.btn-secondary:hover {
+    transform: translateY(-2px);
+}
+
+/* Small button variants */
+.btn-sm {
+    padding: 6px 15px;
+    font-size: 0.875rem;
+}
+
+/* ================================
+   FORMS
+================================ */
+.form-control, .form-select {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+    transform: translateY(-2px);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+/* Form group animations */
+.form-floating {
+    position: relative;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+
+/* ================================
+   TABLES
+================================ */
+.table {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    background: white;
+}
+
+.table thead {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    color: #fff;
+}
+
+.table thead th {
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+    padding: 1rem;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.table tbody td {
+    border: none;
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+/* ================================
+   BADGES
+================================ */
+.badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ================================
+   ALERTS
+================================ */
+.alert {
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    animation: slideInDown 0.5s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================================
+   FOOTER
+================================ */
+footer {
+    background: linear-gradient(45deg, #0d47a1, #1976d2);
+    color: #fff;
+    font-size: 0.9rem;
+    border-radius: 0;
+    margin-top: 0;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+}
+
+/* ================================
+   LIST GROUPS (for suggestions)
+================================ */
+.list-group-item {
+    border: none;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    margin-bottom: 0.25rem;
+    border-radius: 0.5rem !important;
+}
+
+.list-group-item:hover {
+    background-color: #e3f2fd;
+    transform: translateX(5px);
+}
+
+.list-group-item:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+/* ================================
+   LOADING ANIMATIONS
+================================ */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(13,110,253,.3);
+    border-radius: 50%;
+    border-top-color: #0d6efd;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ================================
+   CUSTOM SCROLLBAR
+================================ */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #0b5ed7, #3a9def);
+}
+
+/* ================================
+   UTILITY ANIMATIONS
+================================ */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+================================ */
+@media (max-width: 768px) {
+    .card {
+        padding: 1.5rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .table-responsive {
+        border-radius: 0.5rem;
+    }
+    
+    h2::after {
+        width: 30px;
+        height: 2px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .card {
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+}
+
+/* ================================
+   DASHBOARD SPECIFIC STYLES
+================================ */
+.dashboard-card {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border-left: 4px solid #0d6efd;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #0d6efd;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.875rem;
+}
+
+/* ================================
+   PREDICTION RESULT STYLES
+================================ */
+.result-card {
+    border-left: 5px solid;
+    animation: slideUp 0.5s ease-out;
+}
+
+.result-card.success {
+    border-left-color: #28a745;
+    background: linear-gradient(135deg, #d4edda 0%, #ffffff 100%);
+}
+
+.result-card.warning {
+    border-left-color: #ffc107;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%);
+}
+
+.result-card.danger {
+    border-left-color: #dc3545;
+    background: linear-gradient(135deg, #f8d7da 0%, #ffffff 100%);
+}
+
+/* ================================
+   MEDICAL ICONS
+================================ */
+.medical-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    color: white;
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+/* ================================
+   PROGRESS BARS
+================================ */
+.progress {
+    height: 10px;
+    border-radius: 10px;
+    background-color: #e9ecef;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(45deg, #0d6efd, #42a5f5);
+    transition: width 0.6s ease;
+}
+
+/* ================================
+   CHARTS CONTAINER
+================================ */
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 2rem;
+}
+
+.chart-title {
+    text-align: center;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 1rem;
+}

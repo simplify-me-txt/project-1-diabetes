@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-center">Prediction Result</h2>
+<div class="card mx-auto p-3 mt-3" style="max-width:500px;">
+  <p><strong>Name:</strong> {{ name }}</p>
+  <p><strong>Result:</strong> {{ result }}</p>
+  <p><strong>Stage:</strong> {{ stage }}</p>
+  <p><strong>Suggestions:</strong></p>
+  <pre>{{ suggestion }}</pre>
+  <a href="/download_report/{{ patient_id }}" class="btn btn-success w-100">Download PDF</a>
+</div>
+{% endblock %}
