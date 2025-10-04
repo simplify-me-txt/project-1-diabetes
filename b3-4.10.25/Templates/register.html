@@ -1,0 +1,407 @@
+{% extends "base.html" %}
+{% block title %}Register - Diabetes Prediction Tool{% endblock %}
+
+{% block extra_head %}
+<style>
+/* Registration Page Styling */
+.register-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.register-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    padding: 1.25rem;
+    width: 100%;
+    max-width: 420px;
+    margin: 0.5rem auto;
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.register-title {
+    color: #667eea;
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin-bottom: 0.2rem;
+}
+
+.form-floating {
+    margin-bottom: 0.75rem;
+}
+
+.form-floating > .form-control {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    height: auto;
+    min-height: 48px;
+    line-height: 1.4;
+}
+
+.form-floating > .form-control:focus {
+    background: white;
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+}
+
+.role-selection {
+    margin-bottom: 0.75rem;
+}
+
+.role-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+}
+
+.role-card {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.75rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    position: relative;
+}
+
+.role-card:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+}
+
+.role-card.selected {
+    border-color: #667eea !important;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3) !important;
+}
+
+.role-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: #667eea;
+    color: white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.role-card i {
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+.role-card.patient i {
+    color: #28a745;
+}
+
+.role-card.doctor i {
+    color: #007bff;
+}
+
+.role-card h6 {
+    margin: 0;
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+}
+
+.role-card p {
+    margin: 0.3rem 0 0;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.secret-key-field {
+    display: none;
+    margin-bottom: 0.75rem;
+}
+
+.secret-key-field.show {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-register {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+.login-link {
+    text-align: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.btn-outline-primary {
+    border: 2px solid #667eea;
+    color: #667eea;
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: #667eea;
+    border-color: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .role-cards {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .role-card {
+        padding: 1rem;
+    }
+
+    .role-card i {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="register-card">
+                    <div class="register-header">
+                        <h2 class="register-title">Create Account</h2>
+                        <p class="text-muted">Join our AI-powered health platform</p>
+                    </div>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                          <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                          </div>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" id="registerForm">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="username" name="username"
+                                   placeholder="Username" required>
+                            <label for="username">
+                                <i class="fas fa-user me-2"></i>Username
+                            </label>
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="Email Address" required>
+                            <label for="email">
+                                <i class="fas fa-envelope me-2"></i>Email Address
+                            </label>
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="password" name="password"
+                                   placeholder="Password" required minlength="6">
+                            <label for="password">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                                   placeholder="Confirm Password" required>
+                            <label for="confirm_password">
+                                <i class="fas fa-lock me-2"></i>Confirm Password
+                            </label>
+                        </div>
+
+                        <div class="role-selection">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-user-tag me-2"></i>Select Account Type
+                            </label>
+                            <div class="role-cards">
+                                <div class="role-card patient" id="patientCard">
+                                    <i class="fas fa-user"></i>
+                                    <h6>Patient</h6>
+                                    <p>Get health predictions and insights</p>
+                                </div>
+                                <div class="role-card doctor" id="doctorCard">
+                                    <i class="fas fa-user-md"></i>
+                                    <h6>Healthcare Professional</h6>
+                                    <p>Access patient analytics and dashboard</p>
+                                </div>
+                            </div>
+                            <input type="hidden" id="role" name="role" required>
+                        </div>
+
+                        <!-- Doctor Secret Key Field -->
+                        <div class="secret-key-field" id="secretKeyField">
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="secret_key" name="secret_key"
+                                       placeholder="Doctor Verification Key">
+                                <label for="secret_key">
+                                    <i class="fas fa-key me-2 text-warning"></i>Doctor Verification Key
+                                </label>
+                                <div class="form-text text-warning">
+                                    <i class="fas fa-info-circle"></i> Required for healthcare professional registration (Key: HEALTH2025)
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-register" id="registerBtn">
+                            <span id="btnText">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </span>
+                            <span id="btnLoader" style="display: none;">
+                                <i class="fas fa-spinner fa-spin me-2"></i>Creating Account...
+                            </span>
+                        </button>
+                    </form>
+
+                    <div class="login-link">
+                        <p class="mb-3 text-muted">Already have an account?</p>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login Here
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Simple, bulletproof role selection
+var selectedRole = '';
+
+function selectRole(role) {
+    console.log('Selecting role:', role);
+
+    selectedRole = role;
+    document.getElementById('role').value = role;
+
+    // Clear all selections
+    document.getElementById('patientCard').classList.remove('selected');
+    document.getElementById('doctorCard').classList.remove('selected');
+
+    // Add selection
+    if (role === 'patient') {
+        document.getElementById('patientCard').classList.add('selected');
+        document.getElementById('secretKeyField').classList.remove('show');
+        document.getElementById('secret_key').required = false;
+    } else if (role === 'doctor') {
+        document.getElementById('doctorCard').classList.add('selected');
+        document.getElementById('secretKeyField').classList.add('show');
+        document.getElementById('secret_key').required = true;
+    }
+
+    console.log('Role selected:', role);
+}
+
+// Set up event listeners when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Setting up role selection...');
+
+    // Patient card click
+    document.getElementById('patientCard').addEventListener('click', function(e) {
+        e.preventDefault();
+        selectRole('patient');
+    });
+
+    // Doctor card click
+    document.getElementById('doctorCard').addEventListener('click', function(e) {
+        e.preventDefault();
+        selectRole('doctor');
+    });
+
+    // Form submission validation with loading indicator
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirm_password').value;
+
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            alert('Passwords do not match!');
+            return false;
+        }
+
+        if (!selectedRole) {
+            e.preventDefault();
+            alert('Please select an account type!');
+            return false;
+        }
+
+        // Show loading indicator
+        document.getElementById('btnText').style.display = 'none';
+        document.getElementById('btnLoader').style.display = 'inline';
+        document.getElementById('registerBtn').disabled = true;
+
+        // Set timeout to reset button if submission takes too long
+        setTimeout(function() {
+            document.getElementById('btnText').style.display = 'inline';
+            document.getElementById('btnLoader').style.display = 'none';
+            document.getElementById('registerBtn').disabled = false;
+        }, 10000); // Reset after 10 seconds
+
+        return true;
+    });
+
+    console.log('Role selection setup complete');
+});
+</script>
+{% endblock %}

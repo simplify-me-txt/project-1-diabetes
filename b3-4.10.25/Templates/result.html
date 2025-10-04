@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <div class="card shadow-lg rounded-4 overflow-hidden">
+        <!-- Header -->
+        <div class="card-header text-center py-4 
+                    {% if result == 'Diabetic' %}bg-danger{% else %}bg-success{% endif %} text-white">
+          <h2 class="mb-0">
+            <i class="fas fa-{{ 'heartbeat' if result == 'Diabetic' else 'check-circle' }}"></i>
+            Prediction Results
+          </h2>
+        </div>
+
+        <!-- Patient Information -->
+        <div class="card-body p-4">
+          <div class="text-center mb-4">
+            <h3 class="text-primary">{{ name }}</h3>
+          </div>
+
+          <!-- Result Cards -->
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                  <div class="result-icon mb-3">
+                    {% if result == "Diabetic" %}
+                      <i class="fas fa-exclamation-triangle text-danger" style="font-size: 2.5rem;"></i>
+                    {% else %}
+                      <i class="fas fa-check-circle text-success" style="font-size: 2.5rem;"></i>
+                    {% endif %}
+                  </div>
+                  <h5 class="card-title">Prediction Result</h5>
+                  <h4 class="{% if result == 'Diabetic' %}text-danger{% else %}text-success{% endif %}">
+                    {{ result }}
+                  </h4>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                  <div class="stage-icon mb-3">
+                    {% if stage == "Normal" %}
+                      <i class="fas fa-smile text-success" style="font-size: 2.5rem;"></i>
+                    {% elif stage == "Pre-Diabetic" %}
+                      <i class="fas fa-exclamation text-warning" style="font-size: 2.5rem;"></i>
+                    {% else %}
+                      <i class="fas fa-hospital text-danger" style="font-size: 2.5rem;"></i>
+                    {% endif %}
+                  </div>
+                  <h5 class="card-title">Health Stage</h5>
+                  <h4 class="
+                    {% if stage == 'Normal' %}text-success
+                    {% elif stage == 'Pre-Diabetic' %}text-warning
+                    {% else %}text-danger{% endif %}">
+                    {{ stage }}
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommendations -->
+          <div class="card border-0 bg-light">
+            <div class="card-header bg-info text-white">
+              <h5 class="mb-0">
+                <i class="fas fa-lightbulb"></i> Personalized Recommendations
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="recommendations">
+                {% for line in suggestion.split('\n') %}
+                  {% if line.strip() %}
+                    <div class="recommendation-item mb-2">
+                      <i class="fas fa-check-circle text-primary me-2"></i>
+                      {{ line.strip() }}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <div class="d-grid gap-2 d-md-block text-center">
+                <!-- Download PDF -->
+                <a href="{{ url_for('download_report', patient_id=patient_id) }}" 
+                   class="btn btn-success btn-lg me-md-2 mb-2">
+                  <i class="fas fa-download"></i> Download PDF Report
+                </a>
+                
+                <!-- Share via Email -->
+                <button type="button" 
+                        class="btn btn-primary btn-lg me-md-2 mb-2" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#shareModal">
+                  <i class="fas fa-share"></i> Share via Email
+                </button>
+                
+                <!-- View History -->
+                <a href="{{ url_for('history') }}" 
+                   class="btn btn-outline-secondary btn-lg me-md-2 mb-2">
+                  <i class="fas fa-history"></i> View History
+                </a>
+                
+                <!-- New Test -->
+                <a href="{{ url_for('dashboard') }}" 
+                   class="btn btn-outline-primary btn-lg mb-2">
+                  <i class="fas fa-plus"></i> New Test
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Disclaimer -->
+          <div class="alert alert-warning mt-4" role="alert">
+            <i class="fas fa-info-circle"></i>
+            <strong>Medical Disclaimer:</strong> This prediction is for informational purposes only and should not replace professional medical advice. Please consult with a healthcare professional for proper diagnosis and treatment.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Share Report Modal -->
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="shareModalLabel">
+          <i class="fas fa-share"></i> Share Medical Report
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST" action="{{ url_for('share_report', patient_id=patient_id) }}">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="shareEmail" class="form-label">
+              <i class="fas fa-envelope"></i> Recipient Email Address
+            </label>
+            <input type="email" class="form-control" id="shareEmail" name="email" 
+                   placeholder="Enter email address" required>
+            <div class="form-text">
+              The complete PDF report for {{ name }} will be sent to this email address
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <h6>Report Summary:</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-user text-primary"></i> Patient: {{ name }}</li>
+              <li><i class="fas fa-clipboard-check text-primary"></i> Result: {{ result }}</li>
+              <li><i class="fas fa-chart-line text-primary"></i> Stage: {{ stage }}</li>
+            </ul>
+          </div>
+          
+          <div class="alert alert-info">
+            <i class="fas fa-shield-alt"></i>
+            <strong>Privacy Notice:</strong> This report contains personal health information. 
+            Only share with trusted healthcare providers or authorized individuals.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Send Report
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+.recommendation-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.recommendation-item:last-child {
+  border-bottom: none;
+}
+
+.result-icon, .stage-icon {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.card {
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+</style>
+
+<script>
+// Clear email field when modal is hidden
+document.getElementById('shareModal').addEventListener('hidden.bs.modal', function () {
+  document.getElementById('shareEmail').value = '';
+});
+</script>
+
+{% endblock %}
