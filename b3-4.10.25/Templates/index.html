@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container my-5">
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
   <div class="card shadow-lg p-4 rounded-4 mx-auto col-12 col-md-8 col-lg-6 text-center">
     <h2 class="mb-4 text-primary">Welcome to Diabetes Prediction</h2>
     <p class="mb-4">Fill in your health details to predict your diabetes risk.</p>
@@ -16,16 +28,16 @@
           <input type="number" name="pregnancies" class="form-control" placeholder="Pregnancies" required>
         </div>
         <div class="col-6">
-          <input type="number" name="glucose" class="form-control" placeholder="Glucose Level" required>
+          <input type="number" name="glucose" step="any" class="form-control" placeholder="Glucose Level (mg/dL)" required>
         </div>
         <div class="col-6">
-          <input type="number" name="bp" class="form-control" placeholder="Blood Pressure" required>
+          <input type="number" name="bp" step="any" class="form-control" placeholder="Blood Pressure (mmHg)" required>
         </div>
         <div class="col-6">
-          <input type="number" name="skin" class="form-control" placeholder="Skin Thickness" required>
+          <input type="number" name="skin" step="any" class="form-control" placeholder="Skin Thickness (mm)" required>
         </div>
         <div class="col-6">
-          <input type="number" name="insulin" class="form-control" placeholder="Insulin Level" required>
+          <input type="number" name="insulin" step="any" class="form-control" placeholder="Insulin Level (µU/mL)" required>
         </div>
         <div class="col-6">
           <input type="number" name="bmi" step="0.1" class="form-control" placeholder="BMI" required>
