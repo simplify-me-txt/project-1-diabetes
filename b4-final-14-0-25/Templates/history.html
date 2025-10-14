@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Animated Background Objects -->
+<div class="floating-shapes-container">
+  <div class="floating-shape shape-1"></div>
+  <div class="floating-shape shape-2"></div>
+  <div class="floating-shape shape-3"></div>
+  <div class="floating-shape shape-4"></div>
+</div>
+
+<div class="container my-5" style="position: relative; z-index: 10;">
+  <h2 class="mb-4 text-gradient">
+    <i class="fas fa-history"></i> Your Medical History
+  </h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if stats and stats.total_tests > 0 %}
+  <!-- Health Statistics Cards -->
+  <div class="row mb-4 justify-content-center">
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="stat-card gradient-bg" style="height: 160px; display: flex; align-items: center; justify-content: center;">
+        <div class="card-body text-center text-white w-100">
+          <h6 class="card-title"><i class="fas fa-vial"></i> Total Tests</h6>
+          <h2 class="mb-0">{{ stats.total_tests }}</h2>
+          <small style="visibility: hidden;">placeholder</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="stat-card {% if stats.avg_glucose > 140 %}gradient-bg-alt{% elif stats.avg_glucose > 110 %}bg-warning{% else %}bg-success{% endif %}" style="height: 160px; display: flex; align-items: center; justify-content: center;">
+        <div class="card-body text-center text-white w-100">
+          <h6 class="card-title"><i class="fas fa-tint"></i> Avg Glucose</h6>
+          <h2 class="mb-0">{{ stats.avg_glucose }}</h2>
+          <small>mg/dL</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="stat-card {% if stats.avg_bmi > 30 %}gradient-bg-alt{% elif stats.avg_bmi > 25 %}bg-warning{% else %}bg-success{% endif %}" style="height: 160px; display: flex; align-items: center; justify-content: center;">
+        <div class="card-body text-center text-white w-100">
+          <h6 class="card-title"><i class="fas fa-weight"></i> Avg BMI</h6>
+          <h2 class="mb-0">{{ stats.avg_bmi }}</h2>
+          <small style="visibility: hidden;">placeholder</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="stat-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe); height: 160px; display: flex; align-items: center; justify-content: center;">
+        <div class="card-body text-center text-white w-100">
+          <h6 class="card-title"><i class="fas fa-heartbeat"></i> Avg BP</h6>
+          <h2 class="mb-0">{{ stats.avg_bp }}</h2>
+          <small>mmHg</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Health Trends Chart -->
+  {% if stats.trend_glucose|length > 1 %}
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0"><i class="fas fa-chart-line"></i> Your Health Trends</h5>
+    </div>
+    <div class="card-body">
+      <canvas id="healthTrendChart" height="80"></canvas>
+    </div>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  {% if patients %}
+  <div class="alert alert-info" style="background: rgba(102, 126, 234, 0.2); border-color: rgba(102, 126, 234, 0.5); color: #fff;">
+    <strong><i class="fas fa-shield-alt"></i> Privacy Notice:</strong> You can only view your own medical records for security and privacy.
+  </div>
+
+  <div class="history-table shadow-custom" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(240, 147, 251, 0.3)) !important; backdrop-filter: blur(15px); border: 2px solid rgba(255, 255, 255, 0.25); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);">
+    <table class="table table-hover align-middle mb-0" style="background: transparent !important; margin-bottom: 0 !important;">
+      <thead>
+        <tr style="background: linear-gradient(135deg, #667eea, #764ba2); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+          <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">#</th>
+          <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Patient Name</th>
+          <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Age</th>
+          <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Glucose</th>
+          <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">BMI</th>
+          <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Blood Pressure</th>
+          <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Result</th>
+          <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Stage</th>
+          <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody style="background: transparent;">
+        {% for patient in patients %}
+        <tr style="background: {% if loop.index % 2 == 0 %}linear-gradient(135deg, rgba(102, 126, 234, 0.25), rgba(240, 147, 251, 0.25)){% else %}linear-gradient(135deg, rgba(240, 147, 251, 0.2), rgba(102, 126, 234, 0.2)){% endif %}; backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.15); transition: all 0.3s ease;">
+          <td style="color: #fff; padding: 1rem; font-weight: 600;">{{ loop.index }}</td>
+          <td style="padding: 1rem;">
+            <strong style="color: #fff; font-size: 1.05rem;">{{ patient[2] }}</strong>
+            <small class="d-block" style="color: rgba(255, 255, 255, 0.7); margin-top: 2px;">{{ patient[1] }}</small>
+          </td>
+          <td style="color: #fff; padding: 1rem; font-weight: 500;">{{ patient[3] }} years</td>
+          <td style="padding: 1rem;">
+            <span class="badge {% if patient[4] > 140 %}bg-danger{% elif patient[4] > 110 %}bg-warning{% else %}bg-success{% endif %}">
+              {{ patient[4] }}
+            </span>
+          </td>
+          <td style="padding: 1rem;">
+            <span class="badge {% if patient[5] > 30 %}bg-danger{% elif patient[5] > 25 %}bg-warning{% else %}bg-success{% endif %}">
+              {{ patient[5] }}
+            </span>
+          </td>
+          <td style="color: #fff; padding: 1rem; font-weight: 500;">{{ patient[6] }}</td>
+          <td style="padding: 1rem;">
+            {% if patient[7] == "Diabetic" %}
+              <span class="badge bg-danger">{{ patient[7] }}</span>
+            {% else %}
+              <span class="badge bg-success">{{ patient[7] }}</span>
+            {% endif %}
+          </td>
+          <td style="padding: 1rem;">
+            {% if patient[8] == "Normal" %}
+              <span class="badge bg-success">{{ patient[8] }}</span>
+            {% elif patient[8] == "Pre-Diabetic" %}
+              <span class="badge bg-warning text-dark">{{ patient[8] }}</span>
+            {% else %}
+              <span class="badge bg-danger">{{ patient[8] }}</span>
+            {% endif %}
+          </td>
+          <td style="padding: 1rem;">
+            <div class="btn-group-vertical btn-group-sm" role="group">
+              <a href="{{ url_for('download_report', patient_id=patient[0]) }}" 
+                 class="btn btn-success mb-1" 
+                 title="Download PDF report">
+                 <i class="fas fa-download"></i> PDF
+              </a>
+              <button type="button" 
+                      class="btn btn-primary" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#shareModal" 
+                      onclick="setSharePatientId('{{ patient[0] }}')"
+                      title="Share via email">
+                <i class="fas fa-share"></i> Share
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-3 text-center" style="color: rgba(255, 255, 255, 0.8);">
+    Total records: {{ patients|length }}
+  </div>
+  
+  {% else %}
+  <div class="card text-center p-5">
+    <div class="card-body">
+      <i class="fas fa-folder-open" style="font-size: 4rem; color: #fff;"></i>
+      <h4 class="mt-3" style="color: #fff;">No Medical Records Found</h4>
+      <p style="color: rgba(255, 255, 255, 0.8);">You haven't taken any diabetes prediction tests yet.</p>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-primary" style="color: #fff;">
+        <i class="fas fa-plus"></i> Take Your First Test
+      </a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Share Report Modal -->
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="shareModalLabel">
+          <i class="fas fa-share"></i> Share Medical Report
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="shareForm" method="POST" action="">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="shareEmail" class="form-label" style="color: #2d3748;">
+              <i class="fas fa-envelope"></i> Recipient Email Address
+            </label>
+            <input type="email" class="form-control" id="shareEmail" name="email"
+                   placeholder="Enter email address" required
+                   style="color: #000 !important; background: #fff;">
+            <div class="form-text" style="color: #6c757d;">
+              The PDF report will be sent to this email address
+            </div>
+          </div>
+          <div class="alert alert-info" style="background: rgba(79, 172, 254, 0.15); border-color: rgba(79, 172, 254, 0.3); color: #1a1a3e;">
+            <i class="fas fa-info-circle"></i>
+            <strong>Note:</strong> This will share your complete medical report including
+            personal health information. Only share with trusted healthcare providers or family members.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Send Report
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+function setSharePatientId(patientId) {
+  const form = document.getElementById('shareForm');
+  form.action = `/share-report/${patientId}`;
+}
+
+// Clear email field when modal is hidden
+document.getElementById('shareModal').addEventListener('hidden.bs.modal', function () {
+  document.getElementById('shareEmail').value = '';
+});
+
+{% if stats and stats.trend_glucose|length > 1 %}
+// Health Trend Chart
+const ctx = document.getElementById('healthTrendChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ stats.trend_dates|tojson }},
+        datasets: [
+            {
+                label: 'Glucose (mg/dL)',
+                data: {{ stats.trend_glucose|tojson }},
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                yAxisID: 'y',
+                tension: 0.3
+            },
+            {
+                label: 'BMI',
+                data: {{ stats.trend_bmi|tojson }},
+                borderColor: 'rgb(54, 162, 235)',
+                backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                yAxisID: 'y1',
+                tension: 0.3
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Recent Health Metrics Trend'
+            },
+            legend: {
+                display: true,
+                position: 'top'
+            }
+        },
+        scales: {
+            y: {
+                type: 'linear',
+                display: true,
+                position: 'left',
+                title: {
+                    display: true,
+                    text: 'Glucose (mg/dL)'
+                }
+            },
+            y1: {
+                type: 'linear',
+                display: true,
+                position: 'right',
+                title: {
+                    display: true,
+                    text: 'BMI'
+                },
+                grid: {
+                    drawOnChartArea: false,
+                }
+            }
+        }
+    }
+});
+{% endif %}
+</script>
+
+<style>
+/* Floating shapes animation */
+.floating-shapes-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.floating-shape {
+  position: absolute;
+  opacity: 0.15;
+  animation: floatShape 12s ease-in-out infinite;
+}
+
+.shape-1 {
+  top: 10%;
+  left: 10%;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 50%;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  top: 60%;
+  right: 15%;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  animation-delay: -3s;
+}
+
+.shape-3 {
+  bottom: 20%;
+  left: 20%;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  transform: rotate(45deg);
+  animation-delay: -6s;
+}
+
+.shape-4 {
+  top: 40%;
+  left: 50%;
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #fa709a, #fee140);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation-delay: -9s;
+}
+
+@keyframes floatShape {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-30px) rotate(90deg) scale(1.1);
+  }
+  50% {
+    transform: translateY(-15px) rotate(180deg) scale(0.9);
+  }
+  75% {
+    transform: translateY(-25px) rotate(270deg) scale(1.05);
+  }
+}
+
+/* History Table Custom Styling */
+.history-table {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(240, 147, 251, 0.3)) !important;
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+}
+
+.history-table .table,
+.history-table table,
+.history-table tbody,
+.history-table .table tbody {
+  background: transparent !important;
+}
+
+.history-table tbody tr:hover {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(240, 147, 251, 0.4)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
+  cursor: pointer;
+}
+
+.history-table td, .history-table th {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+</style>
+
+{% endblock %}

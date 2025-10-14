@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Animated Background Objects - Optimized -->
+<div class="floating-shapes-container">
+  <div class="floating-shape shape-1"></div>
+  <div class="floating-shape shape-2"></div>
+  <div class="floating-shape shape-3"></div>
+</div>
+
+<div class="container mt-5" style="position: relative; z-index: 10;">
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h2 class="text-center text-primary">👨‍⚕️ Doctor Dashboard</h2>
+    <p class="text-center">Analytics of all registered patients</p>
+
+    <!-- Stats -->
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card shadow p-3 text-center">
+                <h4>Total Patients</h4>
+                <p class="text-primary">{{ total_patients }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow p-3 text-center">
+                <h4>Diabetic</h4>
+                <p class="text-danger">{{ diabetic_count }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow p-3 text-center">
+                <h4>Non-Diabetic</h4>
+                <p class="text-success">{{ non_diabetic_count }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow p-3 text-center">
+                <h4>Avg Glucose / BMI</h4>
+                <p class="text-info">{{ avg_glucose }} / {{ avg_bmi }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <canvas id="pieChart"></canvas>
+        </div>
+        <div class="col-md-4">
+            <canvas id="barChart"></canvas>
+        </div>
+        <div class="col-md-4">
+            <canvas id="stageChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Patient Data Table -->
+    <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4 class="text-secondary">📋 Patient Records</h4>
+                <small class="text-muted">Showing {{ patients|length }} of {{ total_records }} records</small>
+            </div>
+            <div class="d-flex align-items-center">
+                <!-- Export CSV Button -->
+                <a href="{{ url_for('doctor_export_csv') }}" class="btn btn-success me-2">
+                    <i class="fas fa-download"></i> Export CSV
+                </a>
+                <!-- Search Form -->
+                <form method="GET" class="d-flex align-items-center">
+                    <input type="text"
+                           name="search"
+                           value="{{ search or '' }}"
+                           class="form-control me-2"
+                           placeholder="Search by name, username, result, or stage"
+                           style="width: 300px;">
+                    <button type="submit" class="btn btn-primary me-1">🔍 Search</button>
+                    {% if search %}
+                    <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-secondary">Clear</a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+
+        {% if search %}
+        <div class="alert alert-info">
+            <strong>Search Results:</strong> Found {{ total_records }} patient(s) for "{{ search }}"
+        </div>
+        {% endif %}
+
+        <div class="history-table shadow-custom" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(240, 147, 251, 0.4)) !important; backdrop-filter: blur(8px); border: 2px solid rgba(255, 255, 255, 0.25); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);">
+            <table class="table align-middle mb-0" style="background: transparent !important; margin-bottom: 0 !important; --bs-table-bg: transparent; --bs-table-striped-bg: transparent; --bs-table-hover-bg: rgba(102, 126, 234, 0.3);">
+                <thead>
+                    <tr style="background: linear-gradient(135deg, #667eea, #764ba2); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+                        <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">#</th>
+                        <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Username</th>
+                        <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Name</th>
+                        <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Age</th>
+                        <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Glucose</th>
+                        <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">BMI</th>
+                        <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">BP</th>
+                        <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Result</th>
+                        <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Stage</th>
+                        <th style="color: white; padding: 1.2rem; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if patients %}
+                        {% for p in patients %}
+                        <tr>
+                            <td style="color: #fff; padding: 1rem; font-weight: 600;">{{ loop.index }}</td>
+                            <td style="color: #fff; padding: 1rem; font-weight: 500;">{{ p[1] }}</td>
+                            <td style="padding: 1rem;">
+                                <strong style="color: #fff; font-size: 1.05rem;">{{ p[2] }}</strong>
+                            </td>
+                            <td style="color: #fff; padding: 1rem; font-weight: 500;">{{ p[3] }}</td>
+                            <td style="padding: 1rem;">
+                                <span class="badge {% if p[4]|float > 140 %}bg-danger{% elif p[4]|float > 110 %}bg-warning{% else %}bg-success{% endif %}">
+                                    {{ p[4] }}
+                                </span>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <span class="badge {% if p[5]|float > 30 %}bg-danger{% elif p[5]|float > 25 %}bg-warning{% else %}bg-success{% endif %}">
+                                    {{ p[5] }}
+                                </span>
+                            </td>
+                            <td style="color: #fff; padding: 1rem; font-weight: 500;">{{ p[6] }}</td>
+                            <td style="padding: 1rem;">
+                                {% if p[7] == "Diabetic" %}
+                                    <span class="badge bg-danger">{{ p[7] }}</span>
+                                {% else %}
+                                    <span class="badge bg-success">{{ p[7] }}</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 1rem;">
+                                {% if p[8] == "Normal" %}
+                                    <span class="badge bg-success">{{ p[8] }}</span>
+                                {% elif p[8] == "Pre-Diabetic" %}
+                                    <span class="badge bg-warning text-dark">{{ p[8] }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">{{ p[8] }}</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 1rem;">
+                                <a href="{{ url_for('download_report', patient_id=p[0]) }}"
+                                   class="btn btn-sm btn-success">
+                                   📄 PDF
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="10" class="text-center py-4">
+                                {% if search %}
+                                    No patients found matching "{{ search }}"
+                                {% else %}
+                                    No patient records found
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        {% if total_pages > 1 %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <!-- Previous Button -->
+                <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                    <a class="page-link" href="?page={{ page - 1 }}{% if search %}&search={{ search }}{% endif %}">
+                        Previous
+                    </a>
+                </li>
+
+                <!-- Page Numbers -->
+                {% for p in range(1, total_pages + 1) %}
+                    {% if p == page %}
+                        <li class="page-item active"><span class="page-link">{{ p }}</span></li>
+                    {% elif p == 1 or p == total_pages or (p >= page - 2 and p <= page + 2) %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ p }}{% if search %}&search={{ search }}{% endif %}">{{ p }}</a>
+                        </li>
+                    {% elif p == page - 3 or p == page + 3 %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Next Button -->
+                <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                    <a class="page-link" href="?page={{ page + 1 }}{% if search %}&search={{ search }}{% endif %}">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="text-center text-muted mb-4">
+            Page {{ page }} of {{ total_pages }} ({{ total_records }} total records)
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // ✅ Pass Python dict to JS safely
+    const stages = {{ stages | tojson }};
+
+    // Pie Chart: Diabetic vs Non-Diabetic
+    new Chart(document.getElementById('pieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Diabetic', 'Non-Diabetic'],
+            datasets: [{
+                data: [{{ diabetic_count|tojson }}, {{ non_diabetic_count|tojson }}],
+                backgroundColor: ['#dc3545', '#28a745']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Diabetic vs Non-Diabetic'
+                }
+            }
+        }
+    });
+
+    // Bar Chart: Avg Glucose & BMI
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Average Glucose', 'Average BMI'],
+            datasets: [{
+                label: 'Health Stats',
+                data: [{{ avg_glucose|tojson }}, {{ avg_bmi|tojson }}],
+                backgroundColor: ['#007bff', '#17a2b8']
+            }]
+        },
+        options: { 
+            scales: { y: { beginAtZero: true } },
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Average Health Metrics'
+                }
+            }
+        }
+    });
+
+    // Doughnut Chart: Stages
+    const stageLabels = Object.keys(stages);
+    const stageValues = Object.values(stages);
+
+    if (stageValues.some(v => v > 0)) {
+        new Chart(document.getElementById('stageChart'), {
+            type: 'doughnut',
+            data: {
+                labels: stageLabels,
+                datasets: [{
+                    data: stageValues,
+                    backgroundColor: ['#28a745', '#ffc107', '#ff5733', '#6f42c1']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Patient Stages Distribution'
+                    }
+                }
+            }
+        });
+    } else {
+        document.getElementById('stageChart').parentElement.innerHTML =
+            "<p class='text-center text-muted'>No stage data available</p>";
+    }
+</script>
+
+<style>
+/* Force transparent table background and apply gradient rows */
+.history-table table {
+    background: transparent !important;
+}
+
+.history-table table tbody {
+    background: transparent !important;
+}
+
+.history-table table tbody tr:nth-child(odd) {
+    background: linear-gradient(135deg, rgba(240, 147, 251, 0.2), rgba(102, 126, 234, 0.2)) !important;
+}
+
+.history-table table tbody tr:nth-child(even) {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.25), rgba(240, 147, 251, 0.25)) !important;
+}
+
+.history-table table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    transition: background 0.2s ease;
+}
+
+/* Fix hover overflow issue */
+.history-table table tbody tr:hover {
+    background: rgba(102, 126, 234, 0.3) !important;
+    transform: scale(1);
+}
+
+/* Optimized floating shapes animation - reduced from 6 to 3 shapes */
+.floating-shapes-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.floating-shape {
+  position: absolute;
+  opacity: 0.12;
+  animation: floatShape 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+.shape-1 {
+  top: 10%;
+  left: 10%;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 50%;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  top: 50%;
+  right: 15%;
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  animation-delay: -7s;
+}
+
+.shape-3 {
+  bottom: 20%;
+  left: 20%;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  border-radius: 50%;
+  animation-delay: -14s;
+}
+
+@keyframes floatShape {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-30px) scale(1.05);
+  }
+}
+</style>
+
+{% endblock %}
