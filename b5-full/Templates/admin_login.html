@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% block title %}Admin Login - DiabetesAI{% endblock %}
+
+{% block extra_head %}
+<style>
+/* Admin Login Container */
+.admin-login-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 25%, #7f1d1d 50%, #450a0a 75%, #1a0000 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Admin Card */
+.admin-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    z-index: 10;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.admin-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.admin-icon {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 3rem;
+    color: white;
+    box-shadow: 0 15px 40px rgba(220, 38, 38, 0.5);
+    animation: float-icon 3s ease-in-out infinite;
+}
+
+@keyframes float-icon {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+.brand-logo {
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1px;
+}
+
+.admin-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #dc2626;
+    margin-bottom: 0.5rem;
+}
+
+.admin-subtitle {
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+/* Form Styling */
+.form-floating {
+    margin-bottom: 1.25rem;
+}
+
+.form-floating > .form-control {
+    background: rgba(220, 38, 38, 0.05);
+    border: 2px solid rgba(220, 38, 38, 0.2);
+    border-radius: 15px;
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    color: #2d3748;
+}
+
+.form-floating > .form-control:focus {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: #dc2626;
+    box-shadow: 0 0 0 0.3rem rgba(220, 38, 38, 0.2);
+    transform: translateY(-2px);
+}
+
+.form-floating > label {
+    color: #6c757d;
+    padding-left: 1.25rem;
+}
+
+/* Warning Alert */
+.alert-warning-custom {
+    background: rgba(255, 193, 7, 0.1);
+    border: 2px solid rgba(255, 193, 7, 0.3);
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    color: #856404;
+    font-size: 0.9rem;
+}
+
+/* Buttons */
+.btn-admin {
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    font-size: 1.05rem;
+    width: 100%;
+    transition: all 0.4s ease;
+    margin: 1rem 0;
+    box-shadow: 0 15px 40px rgba(220, 38, 38, 0.4);
+}
+
+.btn-admin:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 50px rgba(220, 38, 38, 0.6);
+    background: linear-gradient(135deg, #991b1b, #7f1d1d);
+    color: white;
+}
+
+/* Footer Links */
+.footer-links {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 2px solid rgba(220, 38, 38, 0.1);
+}
+
+.footer-links a {
+    color: #dc2626;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #991b1b;
+    text-decoration: underline;
+}
+
+.security-note {
+    text-align: center;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: rgba(220, 38, 38, 0.05);
+    border-radius: 10px;
+}
+
+.security-note small {
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+
+/* Alert Styling */
+.alert {
+    border-radius: 15px;
+    border: none;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.alert-danger {
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+    border-left: 4px solid #dc2626;
+}
+
+.alert-success {
+    background: rgba(79, 172, 254, 0.1);
+    color: #4facfe;
+    border-left: 4px solid #4facfe;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .brand-logo {
+        font-size: 2rem;
+    }
+
+    .admin-title {
+        font-size: 1.5rem;
+    }
+
+    .admin-icon {
+        width: 75px;
+        height: 75px;
+        font-size: 2.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-login-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 d-flex justify-content-center">
+                <div class="admin-card">
+                    <div class="admin-header">
+                        <div class="admin-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="brand-logo"><i class="fas fa-brain"></i> DiabetesAI</div>
+                        <h2 class="admin-title">Admin Access</h2>
+                        <p class="admin-subtitle">Restricted Administrative Panel</p>
+                    </div>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                      {% if messages %}
+                        {% for category, message in messages %}
+                          <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                          </div>
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}
+
+                    <div class="alert-warning-custom">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> This is a restricted area for authorized personnel only.
+                    </div>
+
+                    <form method="POST">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="username" name="username"
+                                   placeholder="Admin Username" required autofocus>
+                            <label for="username">
+                                <i class="fas fa-user-cog me-2"></i>Admin Username
+                            </label>
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="password" name="password"
+                                   placeholder="Admin Password" required>
+                            <label for="password">
+                                <i class="fas fa-key me-2"></i>Admin Password
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-admin">
+                            <i class="fas fa-sign-in-alt me-2"></i>Access Admin Panel
+                        </button>
+                    </form>
+
+                    <div class="footer-links">
+                        <a href="{{ url_for('home') }}">
+                            <i class="fas fa-home me-1"></i>Back to Home
+                        </a>
+                    </div>
+
+                    <div class="security-note">
+                        <small>
+                            <i class="fas fa-shield-alt me-1"></i>
+                            All admin activities are logged and monitored
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

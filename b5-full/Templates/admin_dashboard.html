@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - Diabetes Prediction Tool{% endblock %}
+
+{% block extra_head %}
+<style>
+    .admin-header {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border-left: 5px solid;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-card.users {
+        border-left-color: #007bff;
+    }
+
+    .stat-card.doctors {
+        border-left-color: #28a745;
+    }
+
+    .stat-card.predictions {
+        border-left-color: #ffc107;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #6c757d;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .admin-table {
+        margin-bottom: 0;
+    }
+
+    .admin-table th {
+        background: #f8f9fa;
+        border: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9rem;
+    }
+
+    .admin-table td {
+        border: none;
+        border-bottom: 1px solid #e9ecef;
+        vertical-align: middle;
+    }
+
+    .btn-danger-outline {
+        border: 2px solid #dc3545;
+        color: #dc3545;
+        background: transparent;
+        border-radius: 25px;
+        padding: 0.4rem 1rem;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger-outline:hover {
+        background: #dc3545;
+        color: white;
+        transform: scale(1.05);
+    }
+
+    .role-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .role-badge.patient {
+        background: rgba(0, 123, 255, 0.1);
+        color: #007bff;
+        border: 1px solid rgba(0, 123, 255, 0.3);
+    }
+
+    .role-badge.doctor {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.3);
+    }
+
+    .action-timestamp {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .logout-btn {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        border: none;
+        border-radius: 25px;
+        color: white;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Sidebar -->
+<nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-sidebar sidebar collapse">
+    <div class="position-sticky pt-3">
+        <div class="text-center mb-4">
+            <div class="admin-avatar mb-3">
+                <i class="fas fa-user-shield fa-3x text-white"></i>
+            </div>
+            <h5 class="text-white">{{ t['admin_user'] }}</h5>
+            <div class="badge bg-success opacity-75">{{ t['admin'] }}</div>
+        </div>
+
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    {{ t['dashboard'] }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('home') }}">
+                    <i class="fas fa-home me-2"></i>
+                    {{ t['main_site'] }}
+                </a>
+            </li>
+        </ul>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>{{ t['quick_actions'] }}</span>
+        </h6>
+        <ul class="nav flex-column mb-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="location.reload()">
+                    <i class="fas fa-sync-alt me-2"></i>
+                    {{ t['refresh_data'] }}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-file-export me-2"></i>
+                    {{ t['export_data'] }}
+                </a>
+            </li>
+        </ul>
+
+        <div class="mt-5 px-3">
+            <a href="{{ url_for('logout') }}" class="btn logout-btn">
+                <i class="fas fa-sign-out-alt me-2"></i>{{ t['logout'] }}
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div>
+            <h1 class="mb-0">
+                <i class="fas fa-shield-alt me-3"></i>{{ t['admin_dashboard'] }}
+            </h1>
+            <p class="mb-0 mt-2 opacity-75">{{ t['system_overview'] }}</p>
+        </div>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="date-display">
+                <i class="far fa-calendar-alt me-2"></i>
+                <span id="currentDate"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 mb-4">
+        <div class="col">
+            <div class="stat-card" style="border-left: 4px solid #4e73df;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">{{ t['total_users'] }}</div>
+                        <div class="stat-value">{{ total_users }}</div>
+                    </div>
+                    <div class="stat-icon" style="color: #4e73df;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add similar translations for other stat cards if needed -->
+
+        <!-- Example for other stats assuming they exist in context -->
+        <div class="col">
+            <div class="stat-card" style="border-left: 4px solid #1cc88a;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">{{ t['healthcare_professionals'] }}</div>
+                        <div class="stat-value">{{ doctors_count }}</div>
+                    </div>
+                    <div class="stat-icon" style="color: #1cc88a;">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="stat-card" style="border-left: 4px solid #36b9cc;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">{{ t['total_predictions'] }}</div>
+                        <div class="stat-value">{{ total_predictions }}</div>
+                    </div>
+                    <div class="stat-icon" style="color: #36b9cc;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="dashboard-card mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 text-gray-800">
+                <i class="fas fa-list-ul me-2"></i>{{ t['recent_users'] }}
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>{{ t['username'] }}</th>
+                            <th>{{ t['role'] }}</th>
+                            <th>{{ t['email'] }}</th>
+                            <th>{{ t['date'] }}</th>
+                            <th>{{ t['model_agreement'] }}Status</th> <!-- Assuming Status is just Status or similar -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users[-5:]|reverse %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle me-3">
+                                        {{ user[1][0]|upper }}
+                                    </div>
+                                    <div class="fw-bold">{{ user[1] }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                {% if user[3] == 'doctor' %}
+                                <span class="badge bg-info text-dark">{{ t['doctor'] }}</span>
+                                {% elif user[3] == 'admin' %}
+                                <span class="badge bg-warning text-dark">{{ t['admin'] }}</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ t['patient'] }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user[2] }}</td>
+                            <td>
+                                <!-- Assuming date format is compatible across languages or just displaying simpler -->
+                                No Date <!-- Placeholder if date not in user tuple, check tuple structure -->
+                            </td>
+                            <td>
+                                <span class="badge bg-success">{{ t['registered'] }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Log Section (Placeholder) -->
+    <div class="dashboard-card">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 text-gray-800">
+                <i class="fas fa-history me-2"></i>{{ t['admin_activity_log'] }}
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>{{ t['date'] }}</th>
+                            <th>{{ t['action'] }}</th>
+                            <th>{{ t['target_user'] }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">{{ t['no_records_found'] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <script>
+        function refreshData() {
+            location.reload();
+        }
+
+        function exportData() {
+            alert('Export functionality would be implemented here');
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(function () {
+            // Optional: Auto-refresh the page or just the data
+            console.log('Auto-refresh check...');
+        }, 30000);
+    </script>
+    {% endblock %}

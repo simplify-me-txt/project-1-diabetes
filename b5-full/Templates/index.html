@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Animated Background Objects -->
+<div class="floating-shapes-container">
+  <div class="floating-shape shape-1"></div>
+  <div class="floating-shape shape-2"></div>
+  <div class="floating-shape shape-3"></div>
+  <div class="floating-shape shape-4"></div>
+  <div class="floating-shape shape-5"></div>
+  <div class="floating-shape shape-6"></div>
+</div>
+
+<div class="container my-5"
+  style="position: relative; z-index: 10; min-height: 80vh; display: flex; flex-direction: column; justify-content: center;">
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <div class="card shadow-lg p-4 rounded-4 mx-auto col-12 col-md-8 col-lg-6 text-center">
+    <h2 class="mb-4 text-primary">{{ t['welcome_prediction'] }}</h2>
+    <p class="mb-4">{{ t['fill_details'] }}</p>
+    <form method="post" action="{{ url_for('predict') }}">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <input type="text" name="name" class="form-control" placeholder="{{ t['name'] }}" required>
+        </div>
+        <div class="col-md-6">
+          <div class="position-relative">
+            <input type="number" name="age" class="form-control" placeholder="{{ t['age'] }}" required>
+            <span class="info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ t['tooltip_age'] }}">
+              <i class="fas fa-question-circle"></i>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="position-relative">
+            <input type="number" name="pregnancies" class="form-control" placeholder="{{ t['pregnancies'] }}" required>
+            <span class="info-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+              title="{{ t['tooltip_pregnancies'] }}">
+              <i class="fas fa-question-circle"></i>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="position-relative">
+            <input type="number" name="glucose" step="any" class="form-control" placeholder="{{ t['glucose'] }} (mg/dL)"
+              required>
+            <span class="info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ t['tooltip_glucose'] }}">
+              <i class="fas fa-question-circle"></i>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="position-relative">
+            <input type="number" name="bp" step="any" class="form-control"
+              placeholder="{{ t['blood_pressure'] }} (mmHg)" required>
+            <span class="info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ t['tooltip_bp'] }}">
+              <i class="fas fa-question-circle"></i>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="position-relative">
+            <input type="number" name="skin" step="any" class="form-control"
+              placeholder="{{ t['skin_thickness'] }} (mm)" required>
+            <span class="info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ t['tooltip_skin'] }}">
+              <i class="fas fa-question-circle"></i>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="position-relative">
+            <input type="number" name="insulin" step="any" class="form-control" placeholder="{{ t['insulin'] }} (µU/mL)"
+              required>
+            <span class="info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ t['tooltip_insulin'] }}">
+              <i class="fas fa-question-circle"></i>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="position-relative">
+            <input type="number" name="bmi" step="0.1" class="form-control" placeholder="{{ t['bmi'] }}" required>
+            <span class="info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ t['tooltip_bmi'] }}">
+              <i class="fas fa-question-circle"></i>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="position-relative">
+            <input type="number" name="dpf" step="0.01" class="form-control" placeholder="{{ t['dpf'] }}" required>
+            <span class="info-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ t['tooltip_dpf'] }}">
+              <i class="fas fa-question-circle"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary mt-4 w-100">{{ t['predict'] }}</button>
+    </form>
+  </div>
+</div>
+
+<style>
+  /* Info icon styling */
+  .info-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8b9ff5;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .info-icon:hover {
+    color: #667eea;
+    transform: translateY(-50%) scale(1.2);
+  }
+
+  .info-icon i {
+    filter: drop-shadow(0 0 4px rgba(139, 159, 245, 0.5));
+  }
+
+  .position-relative input {
+    padding-right: 45px !important;
+  }
+
+  /* Floating shapes animation */
+  .floating-shapes-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .floating-shape {
+    position: absolute;
+    opacity: 0.15;
+    animation: floatShape 14s ease-in-out infinite;
+  }
+
+  .shape-1 {
+    top: 8%;
+    left: 8%;
+    width: 110px;
+    height: 110px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    animation-delay: 0s;
+  }
+
+  .shape-2 {
+    top: 55%;
+    right: 12%;
+    width: 95px;
+    height: 95px;
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    animation-delay: -2.5s;
+  }
+
+  .shape-3 {
+    bottom: 18%;
+    left: 18%;
+    width: 85px;
+    height: 85px;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    transform: rotate(45deg);
+    animation-delay: -5s;
+  }
+
+  .shape-4 {
+    top: 35%;
+    left: 45%;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #fa709a, #fee140);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    animation-delay: -7.5s;
+  }
+
+  .shape-5 {
+    bottom: 35%;
+    right: 20%;
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, #667eea, #f093fb);
+    border-radius: 20% 80% 20% 80% / 80% 20% 80% 20%;
+    animation-delay: -10s;
+  }
+
+  .shape-6 {
+    top: 65%;
+    left: 30%;
+    width: 75px;
+    height: 75px;
+    background: linear-gradient(135deg, #764ba2, #4facfe);
+    clip-path: circle(50%);
+    animation-delay: -12.5s;
+  }
+
+  @keyframes floatShape {
+
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg) scale(1);
+    }
+
+    25% {
+      transform: translateY(-32px) rotate(90deg) scale(1.12);
+    }
+
+    50% {
+      transform: translateY(-18px) rotate(180deg) scale(0.88);
+    }
+
+    75% {
+      transform: translateY(-28px) rotate(270deg) scale(1.06);
+    }
+  }
+</style>
+
+<script>
+  // Initialize Bootstrap tooltips
+  document.addEventListener('DOMContentLoaded', function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl, {
+        html: true,
+        trigger: 'hover focus'
+      });
+    });
+  });
+</script>
+
+{% endblock %}
