@@ -1,0 +1,662 @@
+{% extends "base.html" %}
+{% block title %}Register - DiabetesAI{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Animated Background */
+    .register-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    @keyframes gradientShift {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    /* Particle Animation */
+    .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .particle {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        animation: rise 15s infinite ease-in;
+    }
+
+    @keyframes rise {
+        0% {
+            bottom: -10%;
+            opacity: 0;
+        }
+
+        10% {
+            opacity: 1;
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        100% {
+            bottom: 110%;
+            opacity: 0;
+        }
+    }
+
+    /* Floating Shapes */
+    .floating-shapes {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .shape {
+        position: absolute;
+        opacity: 0.15;
+        animation: float 8s ease-in-out infinite;
+    }
+
+    .shape:nth-child(1) {
+        top: 10%;
+        left: 10%;
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        animation-delay: -1s;
+    }
+
+    .shape:nth-child(2) {
+        top: 60%;
+        right: 10%;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        animation-delay: -2s;
+    }
+
+    .shape:nth-child(3) {
+        bottom: 20%;
+        left: 15%;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        transform: rotate(45deg);
+        animation-delay: -3s;
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px) rotate(0deg) scale(1);
+        }
+
+        25% {
+            transform: translateY(-20px) rotate(5deg) scale(1.05);
+        }
+
+        50% {
+            transform: translateY(-10px) rotate(-5deg) scale(0.95);
+        }
+
+        75% {
+            transform: translateY(-15px) rotate(3deg) scale(1.02);
+        }
+    }
+
+    /* Register Card */
+    .register-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 30px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+        padding: 2.5rem 2rem;
+        width: 100%;
+        max-width: 480px;
+        position: relative;
+        z-index: 10;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .brand-logo {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        letter-spacing: -1px;
+    }
+
+    .register-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    .register-subtitle {
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+
+    /* Form Styling */
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    .form-floating>.form-control {
+        background: rgba(240, 147, 251, 0.05);
+        border: 2px solid rgba(102, 126, 234, 0.2);
+        border-radius: 15px;
+        padding: 1rem 1.25rem;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        color: #2d3748;
+    }
+
+    .form-floating>.form-control:focus {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: #f093fb;
+        box-shadow: 0 0 0 0.3rem rgba(240, 147, 251, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .form-floating>label {
+        color: #6c757d;
+        padding-left: 1.25rem;
+    }
+
+    /* Role Selection */
+    .role-selection {
+        margin-bottom: 1.5rem;
+    }
+
+    .role-label {
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.75rem;
+        display: block;
+    }
+
+    .role-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .role-card {
+        background: rgba(240, 147, 251, 0.05);
+        border: 2px solid rgba(102, 126, 234, 0.2);
+        border-radius: 20px;
+        padding: 1.25rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+    }
+
+    .role-card:hover {
+        border-color: #667eea;
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        background: rgba(102, 126, 234, 0.1);
+    }
+
+    .role-card.selected {
+        border-color: #f093fb !important;
+        background: linear-gradient(135deg, rgba(240, 147, 251, 0.15), rgba(102, 126, 234, 0.15)) !important;
+        transform: translateY(-8px) scale(1.05) !important;
+        box-shadow: 0 20px 50px rgba(240, 147, 251, 0.4) !important;
+    }
+
+    .role-card.selected::after {
+        content: '✓';
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        color: white;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        animation: checkPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes checkPop {
+        0% {
+            transform: scale(0) rotate(-180deg);
+        }
+
+        100% {
+            transform: scale(1) rotate(0deg);
+        }
+    }
+
+    .role-card i {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+        display: block;
+    }
+
+    .role-card.patient i {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .role-card.doctor i {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .role-card h6 {
+        margin: 0;
+        font-weight: 700;
+        color: #2d3748;
+        font-size: 1.1rem;
+    }
+
+    .role-card p {
+        margin: 0.5rem 0 0;
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    /* Secret Key Field */
+    .secret-key-field {
+        display: none;
+        margin-bottom: 1rem;
+    }
+
+    .secret-key-field.show {
+        display: block;
+        animation: slideDown 0.4s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            max-height: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            max-height: 200px;
+            transform: translateY(0);
+        }
+    }
+
+    .form-text {
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        color: #f093fb;
+    }
+
+    /* Buttons */
+    .btn-register {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        border-radius: 50px;
+        color: white;
+        font-weight: 700;
+        padding: 1rem 2rem;
+        font-size: 1.05rem;
+        width: 100%;
+        transition: all 0.4s ease;
+        margin: 1rem 0;
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-register:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 50px rgba(102, 126, 234, 0.6);
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        color: white;
+    }
+
+    .btn-register:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .login-link {
+        text-align: center;
+        padding-top: 1.5rem;
+        border-top: 2px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .login-link p {
+        color: #6c757d;
+        margin-bottom: 0.75rem;
+    }
+
+    .btn-outline-gradient {
+        background: transparent;
+        border: 2px solid transparent;
+        background-image: linear-gradient(white, white),
+            linear-gradient(135deg, #667eea, #f093fb);
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+        border-radius: 50px;
+        color: #667eea;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        transition: all 0.4s ease;
+    }
+
+    .btn-outline-gradient:hover {
+        background: linear-gradient(135deg, #667eea, #f093fb);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Alert Styling */
+    .alert {
+        border-radius: 15px;
+        border: none;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert-danger {
+        background: rgba(245, 87, 108, 0.1);
+        color: #f5576c;
+        border-left: 4px solid #f5576c;
+    }
+
+    .alert-success {
+        background: rgba(79, 172, 254, 0.1);
+        color: #4facfe;
+        border-left: 4px solid #4facfe;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .register-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .role-cards {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .brand-logo {
+            font-size: 2rem;
+        }
+
+        .register-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Floating Shapes -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 d-flex justify-content-center">
+                <div class="register-card">
+                    <div class="register-header">
+                        <div class="brand-logo"><i class="fas fa-brain"></i> {{ t['app_name'] }}</div>
+                        <h2 class="register-title">{{ t['create_new_account'] }}</h2>
+                        <p class="register-subtitle">{{ t['join_platform'] }}</p>
+                    </div>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show"
+                        role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" id="registerForm">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="username" name="username"
+                                placeholder="{{ t['username'] }}" required>
+                            <label for="username">
+                                <i class="fas fa-user me-2"></i>{{ t['username'] }}
+                            </label>
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="{{ t['email'] }}" required>
+                            <label for="email">
+                                <i class="fas fa-envelope me-2"></i>{{ t['email'] }}
+                            </label>
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="{{ t['password_min_8'] }}" required minlength="8">
+                            <label for="password">
+                                <i class="fas fa-lock me-2"></i>{{ t['password_min_8'] }}
+                            </label>
+                        </div>
+
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                                placeholder="{{ t['confirm_password'] }}" required>
+                            <label for="confirm_password">
+                                <i class="fas fa-lock me-2"></i>{{ t['confirm_password'] }}
+                            </label>
+                        </div>
+
+                        <div class="role-selection">
+                            <label class="role-label">
+                                <i class="fas fa-user-tag me-2"></i>{{ t['select_account_type'] }}
+                            </label>
+                            <div class="role-cards">
+                                <div class="role-card patient" id="patientCard">
+                                    <i class="fas fa-user"></i>
+                                    <h6>{{ t['patient'] }}</h6>
+                                    <p>{{ t['health_predictions'] }}</p>
+                                </div>
+                                <div class="role-card doctor" id="doctorCard">
+                                    <i class="fas fa-user-md"></i>
+                                    <h6>{{ t['healthcare_pro'] }}</h6>
+                                    <p>{{ t['patient_analytics'] }}</p>
+                                </div>
+                            </div>
+                            <input type="hidden" id="role" name="role" required>
+                        </div>
+
+                        <!-- Doctor Secret Key Field -->
+                        <div class="secret-key-field" id="secretKeyField">
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="secret_key" name="secret_key"
+                                    placeholder="{{ t['doctor_verification_key'] }}">
+                                <label for="secret_key">
+                                    <i class="fas fa-key me-2"></i>{{ t['doctor_verification_key'] }}
+                                </label>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i> {{ t['key_required_note'] }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-register" id="registerBtn">
+                            <span id="btnText">
+                                <i class="fas fa-rocket me-2"></i>{{ t['create_account'] }}
+                            </span>
+                            <span id="btnLoader" style="display: none;">
+                                <i class="fas fa-spinner fa-spin me-2"></i>{{ t['creating_account'] }}
+                            </span>
+                        </button>
+                    </form>
+
+                    <div class="login-link">
+                        <p>{{ t['already_have_account'] }}</p>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-gradient">
+                            <i class="fas fa-sign-in-alt me-2"></i>{{ t['login_here'] }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Create particles
+    function createParticles() {
+        const particles = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.width = particle.style.height = Math.random() * 10 + 5 + 'px';
+            particle.style.animationDuration = Math.random() * 10 + 10 + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particles.appendChild(particle);
+        }
+    }
+
+    // Role selection
+    var selectedRole = '';
+
+    function selectRole(role) {
+        selectedRole = role;
+        document.getElementById('role').value = role;
+
+        // Clear selections
+        document.getElementById('patientCard').classList.remove('selected');
+        document.getElementById('doctorCard').classList.remove('selected');
+
+        // Add selection
+        if (role === 'patient') {
+            document.getElementById('patientCard').classList.add('selected');
+            document.getElementById('secretKeyField').classList.remove('show');
+            document.getElementById('secret_key').required = false;
+        } else if (role === 'doctor') {
+            document.getElementById('doctorCard').classList.add('selected');
+            document.getElementById('secretKeyField').classList.add('show');
+            document.getElementById('secret_key').required = true;
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function () {
+        createParticles();
+
+        // Role card events
+        document.getElementById('patientCard').addEventListener('click', function () {
+            selectRole('patient');
+        });
+
+        document.getElementById('doctorCard').addEventListener('click', function () {
+            selectRole('doctor');
+        });
+
+        // Form submission
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return false;
+            }
+
+            if (!selectedRole) {
+                e.preventDefault();
+                alert('Please select an account type!');
+                return false;
+            }
+
+            // Show loading
+            document.getElementById('btnText').style.display = 'none';
+            document.getElementById('btnLoader').style.display = 'inline';
+            document.getElementById('registerBtn').disabled = true;
+
+            setTimeout(function () {
+                document.getElementById('btnText').style.display = 'inline';
+                document.getElementById('btnLoader').style.display = 'none';
+                document.getElementById('registerBtn').disabled = false;
+            }, 10000);
+
+            return true;
+        });
+    });
+</script>
+{% endblock %}
